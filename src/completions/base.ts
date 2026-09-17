@@ -1,59 +1,65 @@
-'use strict';
+"use strict";
 
 import {
-    CompletionItemProvider,
-    CancellationToken,
-    CompletionContext,
-    CompletionItem,
-    CompletionItemKind,
-    DocumentFilter,
-    MarkdownString,
-    Position,
-    SnippetString,
-    TextDocument,
-    workspace
-} from 'vscode'
+  CompletionItemProvider,
+  CancellationToken,
+  CompletionContext,
+  CompletionItem,
+  CompletionItemKind,
+  DocumentFilter,
+  MarkdownString,
+  Position,
+  SnippetString,
+  TextDocument,
+  workspace,
+} from "vscode";
 
-import { PYTHON_SELECTOR } from '../constants'
-import { DjangoSnippet, SnippetProvider } from '../utils'
+import { PYTHON_SELECTOR } from "../constants";
+import { DjangoSnippet, SnippetProvider } from "../utils";
 
 const settings = workspace.getConfiguration("django");
 
-const exclusions: string[] = settings.snippets.exclude
-
-
+const exclusions: string[] = settings.snippets.exclude;
 
 export class DjangoCompletionItemProvider implements CompletionItemProvider {
-    public selector: DocumentFilter = PYTHON_SELECTOR
-    directory: string = ''
-    files: string[] = []
-    snippets: DjangoSnippet[] = []
+  public selector: DocumentFilter = PYTHON_SELECTOR;
+  directory: string = "";
+  files: string[] = [];
+  snippets: DjangoSnippet[] = [];
 
-    async loadSnippets(snippetPrvider: SnippetProvider) {
-        if (! settings.snippets.use) return
-        if (exclusions.some(word => this.directory.includes(word))) return
+  async loadSnippets(snippetPrvider: SnippetProvider) {
+    if (!settings.snippets.use) return;
+    if (exclusions.some((word) => this.directory.includes(word))) return;
 
-        this.snippets = Array.prototype.concat(...await Promise.all(
-            this.files.filter(file => ! exclusions.some(word => file.includes(word)))
-                .map(file => snippetPrvider.readSnippets(`${this.directory}/${file}`))
-        ));
-        if (!settings.i18n) {
-            this.snippets = this.snippets.map(snippet => {
-                snippet.body = snippet.body.replace(/_\("(\S*)"\)/g, '"$1"');
-                return snippet
-            })
-        }
+    this.snippets = Array.prototype.concat(
+      ...(await Promise.all(
+        this.files
+          .filter((file) => !exclusions.some((word) => file.includes(word)))
+          .map((file) => snippetPrvider.readSnippets(`${this.directory}/${file}`)),
+      )),
+    );
+    if (!settings.i18n) {
+      this.snippets = this.snippets.map((snippet) => {
+        snippet.body = snippet.body.replace(/_\("(\S*)"\)/g, '"$1"');
+        return snippet;
+      });
     }
+  }
 
-    private buildSnippet(snippet: DjangoSnippet): CompletionItem {
-        let item = new CompletionItem(snippet.prefix, CompletionItemKind.Snippet);
-        item.insertText = new SnippetString(snippet.body);
-        item.detail = snippet.detail;
-        item.documentation = new MarkdownString(snippet.description);
-        return item
-    }
+  private buildSnippet(snippet: DjangoSnippet): CompletionItem {
+    let item = new CompletionItem(snippet.prefix, CompletionItemKind.Snippet);
+    item.insertText = new SnippetString(snippet.body);
+    item.detail = snippet.detail;
+    item.documentation = new MarkdownString(snippet.description);
+    return item;
+  }
 
-    public async provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): Promise<CompletionItem[]> {
-        return this.snippets.map(this.buildSnippet)
-    }
+  public async provideCompletionItems(
+    _document: TextDocument,
+    _position: Position,
+    _token: CancellationToken,
+    _context: CompletionContext,
+  ): Promise<CompletionItem[]> {
+    return this.snippets.map(this.buildSnippet);
+  }
 }

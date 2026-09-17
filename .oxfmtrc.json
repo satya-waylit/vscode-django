@@ -1,0 +1,16 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "ignorePatterns": [
+    "/out",
+    "/.vscode",
+    "/.vscode-test",
+    "/.vscode-test-web",
+    "/.claude",
+    "/.mcp.json",
+    "/syntaxes",
+    "/snippets",
+    "/completions",
+    "**/*.toml",
+    "**/*.md"
+  ]
+}
