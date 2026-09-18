@@ -1,6 +1,5 @@
 "use strict";
 
-import { dirname, resolve } from "path";
 import {
   CancellationToken,
   Definition,
@@ -42,7 +41,7 @@ export class TemplatePathProvider implements DefinitionProvider {
 
     if (relative_match) {
       path = relative_match[1];
-      search = workspace.asRelativePath(resolve(dirname(document.uri.path), path));
+      search = workspace.asRelativePath(Uri.joinPath(document.uri, "..", path));
     } else if (match) {
       path = match[1];
       search = `**/{templates,jinja2}/${path}`;

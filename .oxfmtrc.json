@@ -10,6 +10,7 @@
     "/syntaxes",
     "/snippets",
     "/completions",
+    "/src/test/fixtures",
     "**/*.toml",
     "**/*.md"
   ]

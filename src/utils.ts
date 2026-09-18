@@ -1,7 +1,6 @@
-import toml = require("toml");
+import { parse } from "toml";
 
-import vscode = require("vscode");
-import { TextDecoder } from "util";
+import * as vscode from "vscode";
 
 export interface DjangoSnippet {
   prefix: string;
@@ -18,7 +17,7 @@ export class SnippetProvider {
     const buffer = await vscode.workspace.fs.readFile(location);
     const str = new TextDecoder("utf-8").decode(buffer);
 
-    return toml.parse(str).snippets;
+    return parse(str).snippets;
   }
 }
 

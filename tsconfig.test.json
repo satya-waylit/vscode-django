@@ -1,0 +1,11 @@
+/* The integration tests run as plain CommonJS inside the extension host, so
+   unlike the shipped extension they are compiled by tsc rather than bundled. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "rootDir": "src",
+    "outDir": "out/test"
+  },
+  "include": ["src"]
+}
