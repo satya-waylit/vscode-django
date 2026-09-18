@@ -62,14 +62,31 @@ Please [create an issue on Github](https://github.com/vscode-django/vscode-djang
 
 ### Setup
 
+The extension builds with [pnpm](https://pnpm.io) and [Vite](https://vite.dev),
+and needs Node 20.19 or later.
+
 ```bash
 git clone https://github.com/vscode-django/vscode-django
 cd vscode-django
-npm install
+pnpm install
 code .
 ```
 
-It’s better to have [TSlint](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) installed.
+[oxlint](https://oxc.rs) lints the code and [oxfmt](https://oxc.rs) formats it.
+Install the [Oxc extension](https://marketplace.visualstudio.com/items?itemName=oxc.oxc-vscode)
+to see both in the editor.
+
+| Command        | What it does                                        |
+| -------------- | --------------------------------------------------- |
+| `pnpm compile` | Builds the extension into `out/`                    |
+| `pnpm watch`   | Rebuilds on every change                            |
+| `pnpm test`    | Compiles, typechecks, lints, then runs the tests    |
+| `pnpm lint`    | Runs oxlint; `pnpm lint:fix` applies the fixes      |
+| `pnpm format`  | Runs oxfmt; `pnpm format:check` only reports        |
+| `make syntax`  | Rebuilds the grammars from the TOML in `syntaxes/`  |
+
+`make syntax` runs its Python script through [Poetry](https://python-poetry.org),
+which you need only when editing the grammars.
 
 ### Launching the extension debugger
 
